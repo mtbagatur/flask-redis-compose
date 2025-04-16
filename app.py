@@ -1,8 +1,12 @@
 from flask import Flask
 import redis
 
+import os
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+r = redis.Redis(host=REDIS_HOST, port=6379)
+
 app = Flask(__name__)
-r = redis.Redis(host="redis", port=6379)
+# r = redis.Redis(host="redis", port=6379)
 
 @app.route("/")
 def index():

@@ -30,5 +30,8 @@ jobs:
         pip install flask redis pytest
 
     - name: Run tests
+      env:
+        REDIS_HOST: redis
       run: |
         pytest test_app.py
+
