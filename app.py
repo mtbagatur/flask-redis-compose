@@ -1,12 +1,25 @@
 from flask import Flask
 import redis
-
 import os
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-r = redis.Redis(host=REDIS_HOST, port=6379)
+import time
 
 app = Flask(__name__)
-# r = redis.Redis(host="redis", port=6379)
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = 6379
+
+# Retry mekanizması (Redis hazır olana kadar bekle)
+for i in range(5):
+    try:
+        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
+        r.ping()
+        print("Redis bağlantısı başarılı.")
+        break
+    except redis.exceptions.ConnectionError as e:
+        print(f"Redis bağlantısı kurulamadı, tekrar deneniyor... ({i+1}/5)")
+        time.sleep(2)
+else:
+    raise Exception("Redis'e bağlanılamadı.")
 
 @app.route("/")
 def index():
