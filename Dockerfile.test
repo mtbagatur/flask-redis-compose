@@ -1,0 +1,6 @@
+# Dockerfile.test
+FROM python:3.10
+WORKDIR /app
+COPY . .
+RUN pip install flask redis pytest
+CMD ["pytest", "test_app.py"]
